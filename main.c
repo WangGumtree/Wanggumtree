@@ -116,7 +116,22 @@ int main()
     Node *HEAD = NULL;
     XY tails = { 0,0 };
     srand((unsigned)time(NULL));
-    printf("\\(@^0^@)// WELCOME GUMTREE \\(@^0^@)// !!\n");
+    // 내림차순 버블정렬
+    int i,j,n=3,temp;
+    int rank[3] = {100913, 91296, 110786};
+    for(i=n-1; i>0; i--)
+    {
+        for(j=0; j<i; j++)
+        {
+            if(rank[j]<rank[j+1])
+            {
+                temp=rank[j];
+                rank[j]=rank[j+1];
+                rank[j+1]=temp;
+            }
+        }
+    }
+    printf("\\(@^0^@)// WELCOME GUMTREE \\(@^0^@)// !!\n\n");
     printf("- 게임키 : 방향키 좌( ← ), 우( → ), 위( ↑ ), 아래( ↓ )\n");
     printf("- 게임종료 : ESC\n\n");
     printf("게임 설명 : \n");
@@ -125,13 +140,11 @@ int main()
     printf("┃                                        ┃\n");
     printf("┃              지렁이 게임               ┃\n");
     printf("┃                                        ┃\n");
+    printf("┃                ranking                 ┃\n");
     printf("┃                                        ┃\n");
-    printf("┃                                        ┃\n");
-    printf("┃                                        ┃\n");
-    printf("┃                                        ┃\n");
-    printf("┃                                        ┃\n");
-    printf("┃                                        ┃\n");
-    printf("┃                                        ┃\n");
+    printf("┃              1. %d 점              ┃\n", rank[0]);
+    printf("┃              2. %d 점              ┃\n", rank[1]);
+    printf("┃              3. %d 점               ┃\n", rank[2]);
     printf("┃                                        ┃\n");
     printf("┃                                        ┃\n");
     printf("┃                                        ┃\n");
