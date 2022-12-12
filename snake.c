@@ -1,0 +1,89 @@
+#include "main.c"
+
+void checkObject(Node **HEAD, XY *tails, Node **obs) // 오브젝트(벽, 꼬리에 닿였는지 확인)
+{
+    Node *tmp = (*HEAD)->tail;
+
+    checkWall(*HEAD); // 벽
+
+
+    while (tmp != NULL) // 자기 꼬리
+    {
+        if (tmp->x == (*HEAD)->x && tmp->y == (*HEAD)->y)
+            end_Game();
+        tmp = tmp->tail;
+    }
+
+    if ((tails->x == (*HEAD)->x) && (tails->y == (*HEAD)->y)) // 꼬리
+    {
+        insertNode(&(*HEAD), (*HEAD)->x, (*HEAD)->y);
+        (*HEAD)->t++;
+        createTail(tails, *obs);
+        createObs(*HEAD, &(*obs), tails);
+        createObs(*HEAD, &(*obs), tails);
+    }
+
+    while (*obs != NULL) // 장애물
+    {
+        if ((*obs)->x == (*HEAD)->x && (*obs)->y == (*HEAD)->y)
+            end_Game();
+        obs = &(*obs)->tail;
+    }
+}
+
+void moveSnake(Node *HEAD, int s) // 뱀의 이동
+{
+    Node *tmp = HEAD;
+    XY tmp1 = { HEAD->x,HEAD->y };
+    XY tmp2 = tmp1;
+    if (s == SEE_LEFT) // 바라보는 방향으로 이동
+        HEAD->x -= 1;
+    else if (s == SEE_RIGHT)
+        HEAD->x += 1;
+    else if (s == SEE_UP)
+        HEAD->y -= 1;
+    else
+        HEAD->y += 1;
+    HEAD = HEAD->tail;
+    while (HEAD != NULL) // 꼬리들 좌표 전달
+    {
+        tmp2.x = HEAD->x;
+        tmp2.y = HEAD->y;
+        HEAD->x = tmp1.x;
+        HEAD->y = tmp1.y;
+        tmp1.x = tmp2.x;
+        tmp1.y = tmp2.y;
+        HEAD = HEAD->tail;
+    }
+    gotoxy(tmp2.x * 2, tmp2.y); // 맨 뒤 꼬리 지우기
+    printf("  ");
+    gotoxy(tmp->x * 2, tmp->y); // 머리 출력
+    printf("◎");
+    if (tmp->tail != NULL) // 전 머리부분 몸통 출력
+    {
+        gotoxy(tmp->tail->x * 2, tmp->tail->y);
+        printf("⊙");
+    }
+}
+
+void createTail(XY *tails, Node *obs) // 보너스 꼬리 아이템 생성
+{
+    int flag = 1;
+    while (flag)
+    {
+        flag = 0;
+        tails->x = rand() % (MAP_X - 1) + 1;
+        tails->y = rand() % (MAP_Y - 1) + 1;
+        while (obs != NULL) // 장애물하고 위치 중복 체크
+        {
+            if (obs->x == tails->x && obs->y == tails->y)
+            {
+                flag = 1;
+                break;
+            }
+            obs = obs->tail;
+        }
+    }
+    gotoxy(tails->x * 2, tails->y);
+    printf("⊙");
+}
