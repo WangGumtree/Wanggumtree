@@ -87,3 +87,33 @@ void createTail(XY *tails, Node *obs) // 보너스 꼬리 아이템 생성
     gotoxy(tails->x * 2, tails->y);
     printf("⊙");
 }
+
+void createObs(Node *Head, Node **obs, XY *tails) // 장애물 생성
+{
+    Node *tmp = *obs;
+    int flag = 1;
+    XY oxy = { 0,0 };
+    while (flag) {
+        flag = 0;
+        oxy.x = rand() % (MAP_X - 1) + 1;
+        oxy.y = rand() % (MAP_Y - 1) + 1;
+        if ((oxy.x == tails->x && oxy.y == tails->y) || // 뱀의 머리, 보너스 꼬리 아이템하고 위치 중복 체크
+            (oxy.x == Head->x && oxy.x == Head->y))
+        {
+            flag = 1;
+            continue;
+        }
+        while (tmp != NULL) // 이전에 생성된 장애물들과 위치 중복 체크
+        {
+            if (tmp->x == oxy.x && tmp->y == oxy.y)
+            {
+                flag = 1;
+                break;
+            }
+            tmp = tmp->tail;
+        }
+    }
+    insertObs(&(*obs), oxy.x, oxy.y); // 장애물 추가
+    gotoxy(oxy.x * 2, oxy.y);
+    printf("▩");
+}
